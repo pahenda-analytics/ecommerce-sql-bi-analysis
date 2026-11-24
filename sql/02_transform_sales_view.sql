@@ -2,8 +2,8 @@
 -- Customer-level analyses will filter customer_id IS NOT NULL
 -- rather than removing anonymous transactions globally.
 
-CREATE OR REPLACE VIEW v_clean_ecommerce_data AS 
-SELECT 
+CREATE OR REPLACE VIEW v_clean_ecommerce_data AS
+SELECT
     invoice,
     stockcode,
     description,
@@ -27,6 +27,6 @@ SELECT
     CAST(delivery_time_days AS INT) AS delivery_time_days,
     revenue,
     profit,
-    CAST(churn_flag AS INT) AS churn_flag 
-FROM sales_data 
-WHERE invoice IS NOT NULL ;
+    CAST(churn_flag AS INT) AS churn_flag
+FROM sales_data
+WHERE invoice IS NOT NULL;

@@ -1,32 +1,20 @@
---Total KPIs
+-- Headline Sales KPIs
+-- Excludes credit notes and bad-debt adjustments from sales metrics.
+
+WITH invoice_totals AS (
+    SELECT
+        invoice,
+        SUM(revenue) AS invoice_revenue,
+        SUM(profit) AS invoice_profit
+    FROM v_clean_ecommerce_data
+    WHERE invoice NOT LIKE 'C%'
+      AND description IS DISTINCT FROM 'Adjust bad debt'
+    GROUP BY invoice
+)
 
 SELECT
-    ROUND(SUM(revenue),2) AS total_revenue,
-    ROUND(SUM(profit),2) AS total_profit,
-    COUNT(DISTINCT invoice) AS total_orders,
-    COUNT(DISTINCT customer_id) AS total_customers,
-    ROUND(AVG(revenue),2) AS avg_transaction_value
-FROM v_clean_ecommerce_data;
-
---Monthly Revenue
-
-SELECT
-    DATE_TRUNC('month',invoice_date) AS sales_month,
-    ROUND(SUM(revenue),2) AS revenue,
-    ROUND(SUM(profit),2) AS profit
-FROM v_clean_ecommerce_data
-GROUP BY 1
-ORDER BY 1;
-
---Running Totals
-
-SELECT
-    DATE_TRUNC('month', invoice_date) AS sales_month,
-    SUM(revenue) AS revenue,
-    SUM(SUM(revenue))
-        OVER (
-            ORDER BY DATE_TRUNC('month', invoice_date)
-        ) AS running_total
-FROM v_clean_ecommerce_data
-GROUP BY 1
-ORDER BY 1;
+    ROUND(SUM(invoice_revenue), 2) AS gross_sales_revenue,
+    ROUND(SUM(invoice_profit), 2) AS gross_sales_profit,
+    COUNT(*) AS total_sales_orders,
+    ROUND(AVG(invoice_revenue), 2) AS average_order_value
+FROM invoice_totals;

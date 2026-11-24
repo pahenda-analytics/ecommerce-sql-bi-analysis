@@ -1,3 +1,6 @@
-data/E-Commerce Sales, Customer & Churn (2009-2011).csv
-sql/create or replave view.sql
+# Source data files
+data/*.csv
 data/CLEANED_DATA.xlsx
+
+# SQL editor files
+sql/create or replave view.sql

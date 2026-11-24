@@ -1,15 +1,22 @@
-DROP TABLE IF EXISTS sales_data CASCADE;
+-- E-commerce Sales Dataset
+-- PostgreSQL table structure reference.
+--
+-- The sales_data table was imported from the source CSV
+-- using pgAdmin's Import/Export functionality.
+--
+-- This script documents the imported table structure.
+-- It does not drop, recreate or overwrite existing data.
 
-CREATE TABLE sales_data (
+CREATE TABLE IF NOT EXISTS sales_data (
     invoice VARCHAR(100),
-    stock_code VARCHAR(100),
+    stockcode VARCHAR(100),
     description VARCHAR(255),
-    quantity NUMERIC,           -- Changed to NUMERIC to handle any hidden ".0"
-    invoice_date VARCHAR(100), 
+    quantity NUMERIC,
+    invoicedate VARCHAR(100),
     price NUMERIC(12, 4),
-    customer_id NUMERIC,       
+    customer_id NUMERIC,
     country VARCHAR(100),
-    customer_age NUMERIC,       -- Changed to NUMERIC to handle "26.0" flawlessly
+    customer_age NUMERIC,
     gender VARCHAR(50),
     signup_date VARCHAR(100),
     last_login_date VARCHAR(100),
@@ -18,11 +25,11 @@ CREATE TABLE sales_data (
     category VARCHAR(100),
     subcategory VARCHAR(100),
     cost NUMERIC(12, 4),
-    discount_amount NUMERIC(12, 4),
+    discount_applied NUMERIC,
     payment_method VARCHAR(100),
-    promo_applied NUMERIC,      -- Changed to NUMERIC to handle "0.0" or "1.0"
-    delivery_time_days NUMERIC, -- Changed to NUMERIC for safety
+    promo_applied NUMERIC,
+    delivery_time_days NUMERIC,
     revenue NUMERIC(12, 4),
     profit NUMERIC(12, 4),
-    churn_flag NUMERIC          -- Changed to NUMERIC to handle "0.0" or "1.0"
+    churn_flag NUMERIC
 );

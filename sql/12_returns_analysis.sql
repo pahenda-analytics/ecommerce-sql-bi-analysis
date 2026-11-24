@@ -1,30 +1,26 @@
---Return metrics
+-- Returns and Credit Note Analysis
+-- Uses credit-note invoices as a proxy for return activity.
+-- Credit notes may include adjustments other than physical product returns.
+
+-- Overall Credit Note Metrics
 
 SELECT
-    COUNT(*) AS return_transactions,
-    ROUND(ABS(SUM(revenue)),2) AS returns_value,
-    ROUND(ABS(SUM(profit)),2) AS returns_profit_impact
+    COUNT(DISTINCT invoice) AS credit_note_invoices,
+    COUNT(*) AS credit_note_transaction_rows,
+    ROUND(SUM(revenue), 2) AS net_credit_note_value,
+    ROUND(SUM(profit), 2) AS net_credit_note_profit_impact
 FROM v_clean_ecommerce_data
 WHERE invoice LIKE 'C%';
 
---Returns by category
+
+-- Credit Note Activity by Category
 
 SELECT
     category,
-    COUNT(*) AS returns,
-    ROUND(ABS(SUM(revenue)),2) AS return_value
+    COUNT(*) AS credit_note_transaction_rows,
+    ROUND(SUM(revenue), 2) AS net_credit_note_value,
+    ROUND(SUM(profit), 2) AS net_credit_note_profit_impact
 FROM v_clean_ecommerce_data
 WHERE invoice LIKE 'C%'
 GROUP BY category
-ORDER BY return_value DESC;
-
---Returns by customer segment
-
-SELECT
-    customer_segment,
-    COUNT(*) AS returns,
-    ROUND(ABS(SUM(revenue)),2) AS return_value
-FROM v_clean_ecommerce_data
-WHERE invoice LIKE 'C%'
-GROUP BY customer_segment
-ORDER BY return_value DESC;
+ORDER BY net_credit_note_value;

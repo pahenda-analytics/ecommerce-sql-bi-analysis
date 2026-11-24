@@ -1,11 +1,20 @@
--- Discount vs no discount
+-- Discount Analysis
+-- Excludes credit notes and bad-debt adjustments.
+
+-- Compare Average Revenue and Profit per Transaction Row
 
 SELECT
     CASE
-        WHEN discount_applied > 0 THEN 'Discount'
+        WHEN discount_applied = 1 THEN 'Discount'
         ELSE 'No Discount'
     END AS discount_group,
-    ROUND(AVG(revenue),2) avg_revenue,
-    ROUND(AVG(profit),2) avg_profit
+    COUNT(*) AS transaction_rows,
+    ROUND(AVG(revenue), 2) AS average_revenue_per_row,
+    ROUND(AVG(profit), 2) AS average_profit_per_row,
+    ROUND(SUM(revenue), 2) AS gross_sales_revenue,
+    ROUND(SUM(profit), 2) AS gross_sales_profit
 FROM v_clean_ecommerce_data
-GROUP BY discount_group;
+WHERE invoice NOT LIKE 'C%'
+  AND description IS DISTINCT FROM 'Adjust bad debt'
+GROUP BY discount_group
+ORDER BY discount_group;

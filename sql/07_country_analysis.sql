@@ -1,19 +1,29 @@
--- Revenue by country
+-- Country Analysis
+-- Excludes credit notes and bad-debt adjustments.
+
+
+-- Revenue and Profit by Country
 
 SELECT
     country,
-    COUNT(DISTINCT customer_id) customers,
-    ROUND(SUM(revenue),2) revenue,
-    ROUND(SUM(profit),2) profit
+    COUNT(DISTINCT customer_id) AS identified_customers,
+    ROUND(SUM(revenue), 2) AS gross_sales_revenue,
+    ROUND(SUM(profit), 2) AS gross_sales_profit
 FROM v_clean_ecommerce_data
+WHERE invoice NOT LIKE 'C%'
+  AND description IS DISTINCT FROM 'Adjust bad debt'
 GROUP BY country
-ORDER BY revenue DESC;
+ORDER BY gross_sales_revenue DESC;
 
--- Customer count by country
+
+-- Identified Customer Count by Country
 
 SELECT
     country,
     COUNT(DISTINCT customer_id) AS total_customers
 FROM v_clean_ecommerce_data
+WHERE customer_id IS NOT NULL
+  AND invoice NOT LIKE 'C%'
+  AND description IS DISTINCT FROM 'Adjust bad debt'
 GROUP BY country
 ORDER BY total_customers DESC;
